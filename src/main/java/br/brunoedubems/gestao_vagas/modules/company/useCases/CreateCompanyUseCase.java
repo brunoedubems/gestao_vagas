@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import br.brunoedubems.gestao_vagas.exceptions.UserFoundException;
 import br.brunoedubems.gestao_vagas.modules.company.entities.CompanyEntity;
-import br.brunoedubems.gestao_vagas.modules.company.useCases.repositories.CompanyRepository;
+import br.brunoedubems.gestao_vagas.modules.company.repositories.CompanyRepository;
 
 @Service
-public class CreateComnpanyUseCase {
+public class CreateCompanyUseCase {
     
     @Autowired
     private CompanyRepository companyRepository;

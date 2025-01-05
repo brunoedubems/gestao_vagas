@@ -1,4 +1,4 @@
-package br.brunoedubems.gestao_vagas.modules.company.useCases.repositories;
+package br.brunoedubems.gestao_vagas.modules.company.repositories;
 
 import java.util.Optional;
 import java.util.UUID;
