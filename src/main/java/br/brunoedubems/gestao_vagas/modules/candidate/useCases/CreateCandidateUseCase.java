@@ -1,12 +1,14 @@
 package br.brunoedubems.gestao_vagas.modules.candidate.useCases;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.brunoedubems.gestao_vagas.exceptions.UserFoundException;
-import br.brunoedubems.gestao_vagas.modules.candidate.CandidateEntity;
-import br.brunoedubems.gestao_vagas.modules.candidate.CandidateRepository;
+import br.brunoedubems.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import br.brunoedubems.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 
 @Service
 public class CreateCandidateUseCase {
@@ -27,4 +29,5 @@ public class CreateCandidateUseCase {
         candidateEntity.setPassword(password);
         return this.candidateRepository.save(candidateEntity);
     }
+
 }

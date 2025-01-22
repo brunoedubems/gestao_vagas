@@ -1,5 +1,4 @@
-package br.brunoedubems.gestao_vagas.modules.candidate.dto;
-
+package br.brunoedubems.gestao_vagas.modules.company.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthCandidateResponseDTO {
-    
-    private String access_token;
+@AllArgsConstructor
+public class AuthCompanyResponseDTO {
+    private String acess_token;
     private Long expires_in;
 }

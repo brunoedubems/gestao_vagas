@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import br.brunoedubems.gestao_vagas.modules.candidate.CandidateRepository;
 import br.brunoedubems.gestao_vagas.modules.candidate.dto.AuthCandidateRequestDTO;
 import br.brunoedubems.gestao_vagas.modules.candidate.dto.AuthCandidateResponseDTO;
+import br.brunoedubems.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import jakarta.security.auth.message.AuthException;
 
 @Service
@@ -43,15 +43,17 @@ public class AuthCandidateUseCase {
         }
         
         Algorithm algorithm = Algorithm.HMAC256(secretkey);
+        var expiresIn = Instant.now().plus(Duration.ofMinutes(10));
         var token = JWT.create()
                 .withIssuer("javagas")
                 .withSubject(candidate.getId().toString())
-                .withClaim("roles", Arrays.asList("candidate"))
-                .withExpiresAt(Instant.now().plus(Duration.ofMinutes(10)))
+                .withClaim("roles", Arrays.asList("CANDIDATE"))
+                .withExpiresAt(expiresIn)
                 .sign(algorithm);
 
         var AuthCandidateResponse = AuthCandidateResponseDTO.builder()
                 .access_token(token)
+                .expires_in(expiresIn.toEpochMilli())
                 .build();
 
         return AuthCandidateResponse;
