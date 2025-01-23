@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidato", description = "Informação do candidato")
 public class CandidateController {
 
     @Autowired
@@ -44,6 +45,14 @@ public class CandidateController {
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
     @PostMapping("/")
+    @Operation(summary = "Cadastro de Candidato",
+    description= "Essa função é responsável por Cadastrar um candidato")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {
+                @Content(schema = @Schema(implementation = CandidateEntity.class)) 
+            }),
+            @ApiResponse(responseCode = "400", description = "Usuário já existe")
+})
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
         try {
             var result = this.createCandidateUseCase.execute(candidateEntity);
@@ -53,9 +62,9 @@ public class CandidateController {
         }
     }
 
+
     @GetMapping("/")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidato", description = "Informação do candidato")
     @Operation(summary = "Perfil do candidato",
     description= "Essa função é responsável por bucar as informações do perfil do candidato")
     @SecurityRequirement(name = "jwt_auth")
@@ -78,7 +87,6 @@ public class CandidateController {
 
     @GetMapping("/job")
     @PreAuthorize("hasRole('CANDIDATE')")
-    @Tag(name = "Candidato", description = "Informação do candidato")
     @Operation(summary = "Listagem de vagas disponivel para o candidato", description = "Essa função é responável de listar todas as vagas disponivel, baseada no filtro")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
