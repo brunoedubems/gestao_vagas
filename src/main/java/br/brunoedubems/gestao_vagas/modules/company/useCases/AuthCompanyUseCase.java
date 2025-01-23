@@ -1,6 +1,5 @@
 package br.brunoedubems.gestao_vagas.modules.company.useCases;
 
-import java.lang.module.ModuleDescriptor.Builder;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -54,11 +53,11 @@ public class AuthCompanyUseCase {
                 .withClaim("roles", Arrays.asList("COMPANY"))
                 .sign(algorithm); // assinando-o com o algoritmo HMAC256
 
-                var authCompanyResponseDTO =  AuthCompanyResponseDTO.builder()
-                .acess_token(token)
+        var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
+                .access_token(token)
                 .expires_in(expiresIn.toEpochMilli())
                 .build();
 
-             return authCompanyResponseDTO;
+        return authCompanyResponseDTO;
     }
 }

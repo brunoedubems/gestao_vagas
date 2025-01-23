@@ -19,7 +19,7 @@ public class AuthCompanyController {
     private AuthCompanyUseCase authCompanyUseCase;
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> create(@RequestBody AuthCompanyDTO AuthCompanyDTO){
+    public ResponseEntity<Object> create(@RequestBody AuthCompanyDTO AuthCompanyDTO) {
         try {
             var result = this.authCompanyUseCase.execute(AuthCompanyDTO);
             return ResponseEntity.ok().body(result);

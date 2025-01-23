@@ -1,7 +1,6 @@
 package br.brunoedubems.gestao_vagas.security;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +15,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Component //simplesmente um objeto que o Spring cria, configura e gerencia. 
-public class SecurityFilter extends OncePerRequestFilter { // OncePerRequestFilter: Garante que o filtro será executado uma vez por requisição.
+@Component // simplesmente um objeto que o Spring cria, configura e gerencia.
+public class SecurityFilter extends OncePerRequestFilter { // OncePerRequestFilter: Garante que o filtro será executado
+                                                           // uma vez por requisição.
 
     @Autowired
     private JWTProvider jwtProvider;
@@ -29,36 +29,34 @@ public class SecurityFilter extends OncePerRequestFilter { // OncePerRequestFilt
             FilterChain filterChain) // Permite que a requisição siga para o próximo filtro ou controller.
             throws ServletException, IOException {
 
-        //SecurityContextHolder.getContext().setAuthentication(null); // Garante que nenhuma autenticação antiga afete a nova requisição.
+        String header = request.getHeader("Authorization"); // Aqui o filtro busca o token JWT no cabeçalho o nome de
+                                                            // "Authorization" da requisição.
 
-        String header = request.getHeader("Authorization"); //Aqui o filtro busca o token JWT no cabeçalho o nome de "Authorization" da requisição.
+        if (request.getRequestURI().startsWith("/company")) {
+            if (header != null) { 
+                var token = this.jwtProvider.validateToken(header);
 
-    if(request.getRequestURI().startsWith("/company")){
+                if (token == null) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
 
-        if (header != null) { //Se o token for inválido ou expirado, retorna 401 Unauthorized e encerra o processo. código verifica se o cabeçalho "Authorization" da requisição não está vazio.
-            var token = this.jwtProvider.validateToken(header);
-            
-            if (token == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                var roles = token.getClaim("roles").asList(Object.class);
+                var grants = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                        .toList();
+
+                request.setAttribute("company_id", token.getSubject()); 
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(),
+                        null, // Cria um objeto de autenticação com o ID extraído do token.
+                        grants);
+
+                SecurityContextHolder.getContext().setAuthentication(auth); // Registra o usuário como autenticado no
+                                                                            // Spring Security
             }
-
-            var roles = token.getClaim("roles").asList(Object.class);
-           var grants = roles.stream()
-            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
-            .toList();
-    
-            request.setAttribute("company_id", token.getSubject()); //Salva o token no request para ser usado depois.
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(), null, //Cria um objeto de autenticação com o ID extraído do token.
-                    grants);
-                   
-            SecurityContextHolder.getContext().setAuthentication(auth); //Registra o usuário como autenticado no Spring Security
         }
-    }
 
-
-
-        filterChain.doFilter(request, response);//Se tudo deu certo, a requisição continua normalmente.
+        filterChain.doFilter(request, response);// Se tudo deu certo, a requisição continua normalmente.
     }
 
 }
