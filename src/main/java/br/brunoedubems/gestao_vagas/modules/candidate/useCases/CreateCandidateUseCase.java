@@ -1,7 +1,5 @@
 package br.brunoedubems.gestao_vagas.modules.candidate.useCases;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
