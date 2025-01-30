@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component // simplesmente um objeto que o Spring cria, configura e gerencia.
-public class SecurityFilter extends OncePerRequestFilter { // OncePerRequestFilter: Garante que o filtro será executado
+public class SecurityCompanyFilter extends OncePerRequestFilter { // OncePerRequestFilter: Garante que o filtro será executado
                                                            // uma vez por requisição.
 
     @Autowired
